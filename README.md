@@ -23,13 +23,25 @@ Example prompts:
 You need:
 
 - [Claude Desktop](https://claude.ai/download) on macOS or Windows
-- A Cin7 Core login with the "Cin7 Core API Setup" permission
+- A Cin7 Core login with the "Settings: Cin7 Core API Setup" permission
 
-### 1. Create your Cin7 Core API keys
+### 1. Get your Cin7 Core credentials
 
-1. In Cin7 Core, open **Integrations**, then **API**.
-2. Click **+**, enter a name such as "Claude", and click **Create**.
-3. Open the **Setup** tab and keep it open. It shows the **Account ID** and the **Key** you will paste in step 3.
+The extension asks for two values when you install it: an **Account ID** and an **API Application Key**. You create both inside Cin7 Core.
+
+1. Log in to Cin7 Core and open **Integrations**, then **API**. You can also go straight to <https://inventory.dearsystems.com/ExternalAPI>.
+2. On the API Integration page, click the **+** icon at the top right.
+3. Enter a name such as "Claude" and click **Create**.
+4. Open the **Setup** tab. It shows the **Account ID** and the **Key**. Keep this page open so you can copy both in step 3.
+
+Good to know:
+
+- Your Cin7 Core user needs the **Settings: Cin7 Core API Setup** permission to create keys. If the API page is missing, ask your Cin7 Core administrator for that permission.
+- Create a separate API application for Claude. Cin7 Core's limit of 60 requests per minute applies to each application, so Claude gets its own allowance.
+- Cin7 Core's standard plan includes two external integrations. If your account already uses two, you may need to add a licence under **My Subscription** first.
+- Treat the Account ID and Key like a login and password. Paste them only into the extension's install screen.
+
+These steps follow Cin7's help articles [Connecting to the Cin7 Core API](https://help.core.cin7.com/hc/en-us/articles/9982480315407-Connecting-to-the-Cin7-Core-API) and [Zapier Integration](https://help.core.cin7.com/hc/en-us/articles/9034605212175-Zapier-Integration).
 
 ### 2. Download the extension
 
@@ -65,7 +77,7 @@ On a Team or Enterprise plan, an Owner or Primary Owner can upload the extension
 4. Click **Add custom extension** and choose the `.mcpb` file. It appears under **Custom team extensions**.
 5. Click **...** next to it, then **Add to team**. This adds it to your allowlist and enables it for your team.
 
-Members then install it from the extension list in Claude Desktop and paste the Cin7 Core Account ID and Key when asked.
+Members then install it from the extension list in Claude Desktop and paste the Cin7 Core Account ID and Key when asked. See [Get your Cin7 Core credentials](#1-get-your-cin7-core-credentials).
 
 ### Before you turn on the allowlist
 
