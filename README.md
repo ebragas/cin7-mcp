@@ -33,7 +33,7 @@ You need:
 
 ### 2. Download the extension
 
-Download the `.mcpb` file from the [latest release](https://github.com/ebragas/cin7-mcp/releases/latest).
+[Download cin7-core.mcpb](https://github.com/ebragas/cin7-mcp/releases/latest/download/cin7-core.mcpb). This link always gives you the newest version.
 
 ### 3. Install it
 
@@ -63,7 +63,9 @@ Claude asks for permission the first time it uses a tool. Approve it, and the an
 | Nothing happens when you choose the file | Update Claude Desktop, then try double-clicking the `.mcpb` file. |
 | A product is missing from stock results | Cin7 Core may leave out products that have no stock record. |
 
-To update, download the newer `.mcpb` file and install it the same way.
+## Update
+
+Download the file again from the link in step 2 and install it the same way. Privately shared extensions update when you install the newer file.
 
 ## Status
 
@@ -82,6 +84,12 @@ npm test
 npm run pack
 ```
 
-`npm run pack` builds the server into a single file and writes the `.mcpb` file to the project root.
+`npm run pack` builds the server into a single file and writes `cin7-core.mcpb` to the project root.
 
 To run the server during development, add it to `claude_desktop_config.json` with `CIN7_ACCOUNT_ID` and `CIN7_APPLICATION_KEY` set in its `env`, pointing `node` at `bundle/server/index.js`.
+
+## Releasing
+
+Every push to `main` runs the typecheck and tests, builds the bundle, and saves it as a workflow artifact. A GitHub release is published when the version has no release yet.
+
+To cut a release, set the new version in `package.json`, `bundle/manifest.json` and `src/index.ts`, then push to `main`. The build fails when the three disagree.

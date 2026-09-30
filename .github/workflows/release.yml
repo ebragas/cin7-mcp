@@ -1,0 +1,54 @@
+name: Build and release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Read version
+        id: version
+        run: echo "version=$(node scripts/check-version.mjs)" >> "$GITHUB_OUTPUT"
+
+      - run: npm run typecheck
+
+      - run: npm test
+
+      - run: npm run pack
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cin7-core-${{ steps.version.outputs.version }}
+          path: cin7-core.mcpb
+          if-no-files-found: error
+
+      # A release is published once per version. Bump the version to cut the next one.
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if gh release view "v$VERSION" > /dev/null 2>&1; then
+            echo "Release v$VERSION already exists. Bump the version to publish a new one."
+          else
+            gh release create "v$VERSION" cin7-core.mcpb --target "$GITHUB_SHA" --title "v$VERSION" --generate-notes
+          fi

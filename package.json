@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "validate": "mcpb validate bundle/manifest.json",
-    "pack": "npm run build && npm run validate && mcpb pack bundle cin7-core-0.1.0.mcpb"
+    "check-version": "node scripts/check-version.mjs",
+    "pack": "npm run check-version && npm run build && npm run validate && mcpb pack bundle cin7-core.mcpb"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.2.0",
