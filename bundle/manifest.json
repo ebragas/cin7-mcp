@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "cin7-core",
   "display_name": "Cin7 Core (read-only)",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Read-only access to Cin7 Core stock levels and purchase orders from Claude Desktop.",
   "author": { "name": "Eric Bragas" },
   "server": {
@@ -10,7 +10,9 @@
     "entry_point": "server/index.js",
     "mcp_config": {
       "command": "node",
-      "args": ["${__dirname}/server/index.js"],
+      "args": [
+        "${__dirname}/server/index.js"
+      ],
       "env": {
         "CIN7_ACCOUNT_ID": "${user_config.account_id}",
         "CIN7_APPLICATION_KEY": "${user_config.application_key}"
@@ -18,7 +20,18 @@
     }
   },
   "tools": [
-    { "name": "ping", "description": "Report whether both Cin7 keys reached the server, without showing them." }
+    {
+      "name": "get_stock_levels",
+      "description": "How many of a product are in stock, where, and how many are on order."
+    },
+    {
+      "name": "list_purchases",
+      "description": "What purchase orders exist, from which supplier, and when they are due."
+    },
+    {
+      "name": "get_purchase",
+      "description": "What is on one purchase order and what has arrived."
+    }
   ],
   "user_config": {
     "account_id": {
@@ -37,8 +50,15 @@
     }
   },
   "compatibility": {
-    "platforms": ["darwin", "win32"],
-    "runtimes": { "node": ">=20.0.0" }
+    "platforms": [
+      "darwin",
+      "win32"
+    ],
+    "runtimes": {
+      "node": ">=20.0.0"
+    }
   },
-  "privacy_policies": ["https://www.cin7.com/legal/privacy-policy/"]
+  "privacy_policies": [
+    "https://www.cin7.com/legal/privacy-policy/"
+  ]
 }
