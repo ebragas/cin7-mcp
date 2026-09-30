@@ -53,6 +53,36 @@ Start a new chat and ask:
 
 Claude asks for permission the first time it uses a tool. Approve it, and the answer comes from your Cin7 Core account.
 
+## Install for a whole team (Claude Team or Enterprise)
+
+On a Team or Enterprise plan, an Owner or Primary Owner can upload the extension once so members install it from inside Claude Desktop. These steps follow Anthropic's guide, [Enabling and using the desktop extension allowlist](https://support.claude.com/en/articles/12592343-enabling-and-using-the-desktop-extension-allowlist).
+
+### Upload the extension
+
+1. [Download cin7-core.mcpb](https://github.com/ebragas/cin7-mcp/releases/latest/download/cin7-core.mcpb).
+2. Open Claude Desktop and click your initials or name in the lower left corner.
+3. Open **Organization settings**, then **Connectors**, and switch to the **Desktop** tab.
+4. Click **Add custom extension** and choose the `.mcpb` file. It appears under **Custom team extensions**.
+5. Click **...** next to it, then **Add to team**. This adds it to your allowlist and enables it for your team.
+
+Members then install it from the extension list in Claude Desktop and paste the Cin7 Core Account ID and Key when asked.
+
+### Before you turn on the allowlist
+
+The allowlist is off by default, and the **Allowlist** toggle sits on the same **Desktop** tab. Read Anthropic's guide before switching it on, because it changes what everyone in the organization can use:
+
+- Desktop extensions that members already installed are removed from their Claude Desktop.
+- Members can install only the extensions on the allowlist, and only from the in-app list.
+- Members need Claude Desktop 0.13.91 or later.
+
+### Update the team's version
+
+1. Download the newest `cin7-core.mcpb` from the same link.
+2. On the **Desktop** tab, open the **...** menu next to the extension and choose **Upload new version**.
+3. Choose the new file.
+
+Claude Desktop accepts the upload when the new file has a higher version number and the same name, which every release of this extension does.
+
 ## Troubleshooting
 
 | What you see | What to do |
