@@ -1,0 +1,44 @@
+{
+  "manifest_version": "0.3",
+  "name": "cin7-core",
+  "display_name": "Cin7 Core (read-only)",
+  "version": "0.0.1",
+  "description": "Read-only access to Cin7 Core stock levels and purchase orders from Claude Desktop.",
+  "author": { "name": "Eric Bragas" },
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.js"],
+      "env": {
+        "CIN7_ACCOUNT_ID": "${user_config.account_id}",
+        "CIN7_APPLICATION_KEY": "${user_config.application_key}"
+      }
+    }
+  },
+  "tools": [
+    { "name": "ping", "description": "Report whether both Cin7 keys reached the server, without showing them." }
+  ],
+  "user_config": {
+    "account_id": {
+      "type": "string",
+      "title": "Cin7 Core Account ID",
+      "description": "Account ID from Cin7 Core: Integrations, then API, on the application's Setup tab.",
+      "sensitive": true,
+      "required": true
+    },
+    "application_key": {
+      "type": "string",
+      "title": "Cin7 Core API Application Key",
+      "description": "Key from Cin7 Core: Integrations, then API, on the application's Setup tab.",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "compatibility": {
+    "platforms": ["darwin", "win32"],
+    "runtimes": { "node": ">=20.0.0" }
+  },
+  "privacy_policies": ["https://www.cin7.com/legal/privacy-policy/"]
+}
