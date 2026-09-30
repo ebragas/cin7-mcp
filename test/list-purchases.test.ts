@@ -41,6 +41,15 @@ describe('mapPurchaseList', () => {
         expect(mapPurchaseList(null)).toMatchObject({ rows: [], total: 0, page: 1 });
     });
 
+    it('uses the requested page when Cin7 leaves Page out of the body', () => {
+        const { Page: _page, ...withoutPage } = fixture;
+
+        const result = mapPurchaseList({ ...withoutPage, Total: 450 }, 3);
+
+        expect(result.page).toBe(3);
+        expect(result.note).toContain('page 4');
+    });
+
     it('names the next page when more pages exist', () => {
         expect(mapPurchaseList({ ...fixture, Total: 250 }).note).toContain('page 2');
         expect(mapPurchaseList({ ...fixture, Total: 250, Page: 3 })).not.toHaveProperty('note');

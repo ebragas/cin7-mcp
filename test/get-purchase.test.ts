@@ -78,6 +78,19 @@ describe('mapPurchase', () => {
         ).toEqual([]);
     });
 
+    it('skips DRAFT sections, whose receipts are not yet authorised', () => {
+        const draft = <T extends { Status: string }>(sections: T[]) =>
+            sections.map(section => ({ ...section, Status: 'DRAFT' }));
+
+        expect(mapPurchase({ ...detail, PutAway: draft(detail.PutAway) }).receipts).toEqual([
+            { ...putAwayReceipt, location: null }
+        ]);
+        expect(
+            mapPurchase({ ...detail, PutAway: draft(detail.PutAway), StockReceived: draft(detail.StockReceived) })
+                .receipts
+        ).toEqual([]);
+    });
+
     it('collects lines from every available section', () => {
         const second = { ...detail.PutAway[0]!, Lines: [{ ...detail.PutAway[0]!.Lines[0]!, Quantity: 2, Location: 'Annex' }] };
 
@@ -134,7 +147,7 @@ describe('getPurchase', () => {
         const result = await getPurchase(cin7, { orderNumber: 'po-00080' });
 
         expect(cin7.get.mock.calls).toEqual([
-            ['purchaseList', { Search: 'po-00080', Limit: 100 }],
+            ['purchaseList', { Search: 'po-00080', Limit: 1000 }],
             ['advanced-purchase', { ID: second.ID }]
         ]);
         expect(result).toMatchObject({ orderNumber: 'PO-00069' });
@@ -168,7 +181,7 @@ describe('getPurchase', () => {
 
         const result = await getPurchase(cin7, { orderNumber: 'PO-000' });
 
-        expect(result).toMatchObject({ note: expect.stringContaining('first 100 of 140') });
+        expect(result).toMatchObject({ note: expect.stringContaining('first 2 of 140') });
     });
 
     it('lists the candidates and asks for an id when several purchases share the order number', async () => {

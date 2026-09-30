@@ -36,6 +36,15 @@ describe('mapStockLevels', () => {
         expect(mapStockLevels({ ...fixture, Total: 200, Page: 2 })).not.toHaveProperty('note');
     });
 
+    it('uses the requested page when Cin7 leaves Page out of the body', () => {
+        const { Page: _page, ...withoutPage } = fixture;
+
+        const result = mapStockLevels({ ...withoutPage, Total: 450 }, 3);
+
+        expect(result.page).toBe(3);
+        expect(result.note).toContain('page 4');
+    });
+
     it('names the next page when more pages exist', () => {
         expect(mapStockLevels({ ...fixture, Total: 101 }).note).toContain('page 2');
         expect(mapStockLevels({ ...fixture, Total: 201, Page: 2 }).note).toContain('page 3');

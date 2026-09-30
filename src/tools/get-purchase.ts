@@ -1,5 +1,5 @@
 import * as z from 'zod/v4';
-import { PAGE_SIZE, type Cin7Client } from '../cin7';
+import type { Cin7Client } from '../cin7';
 import type { PurchaseListResponse } from './list-purchases';
 
 export const name = 'get_purchase';
@@ -7,7 +7,7 @@ export const name = 'get_purchase';
 export const description =
     'What is on one purchase order and what has arrived: the header, the ordered lines and the received lines, each ' +
     'with its SKU. Give exactly one of orderNumber or id. Receipts are a plain list of received lines; compare them ' +
-    'with the ordered lines to see what is outstanding.';
+    'with the ordered lines to see what is outstanding. A Service Purchase holds charges only, so its lines are empty.';
 
 export const inputSchema = z.object({
     orderNumber: z.string().optional().describe('Exact purchase order number, for example PO-00069'),
@@ -52,11 +52,14 @@ interface AdvancedPurchaseResponse {
     PutAway?: ReceiptSection[] | null;
 }
 
+const NOT_RECEIVED_STATUSES = new Set(['NOT AVAILABLE', 'DRAFT', 'VOIDED']);
+
 function receiptLines(sections: ReceiptSection[] | null | undefined) {
     if (!Array.isArray(sections)) return [];
     return sections
-        // NOT AVAILABLE is a stage that has not happened; VOIDED is a receipt that was undone.
-        .filter(section => section.Status !== 'NOT AVAILABLE' && section.Status !== 'VOIDED')
+        // NOT AVAILABLE is a stage that has not happened, DRAFT is a receipt that is entered but not yet
+        // authorised, and VOIDED is a receipt that was undone. None of them is stock that has arrived.
+        .filter(section => !NOT_RECEIVED_STATUSES.has(section.Status ?? ''))
         .flatMap(section => section.Lines ?? [])
         .map(line => ({
             sku: line.SKU ?? null,
@@ -93,6 +96,9 @@ export function mapPurchase(purchase: AdvancedPurchaseResponse) {
     };
 }
 
+/** The order number search reads one page, so it asks for the largest page Cin7 serves. */
+const LOOKUP_LIMIT = 1000;
+
 type OrderNumberLookup =
     | { id: string }
     | { note: string; nearMatches: Array<{ orderNumber: string | null; supplier: string | null }> }
@@ -120,8 +126,8 @@ export function resolveOrderNumber(response: PurchaseListResponse, orderNumber: 
 
     const total = response.Total ?? rows.length;
     const overflow =
-        total > PAGE_SIZE
-            ? ` Only the first ${PAGE_SIZE} of ${total} search results were checked, so a more specific order number may still match.`
+        total > rows.length
+            ? ` Only the first ${rows.length} of ${total} search results were checked, so the purchase may still exist. Find its id with list_purchases and call get_purchase with that id.`
             : '';
     return {
         note: `No purchase has the exact order number "${orderNumber}".${overflow}`,
@@ -138,7 +144,7 @@ export async function getPurchase(cin7: Cin7Client, input: z.infer<typeof inputS
 
     let purchaseId = id;
     if (orderNumber) {
-        const list = await cin7.get('purchaseList', { Search: orderNumber, Limit: PAGE_SIZE });
+        const list = await cin7.get('purchaseList', { Search: orderNumber, Limit: LOOKUP_LIMIT });
         const lookup = resolveOrderNumber(list as PurchaseListResponse, orderNumber);
         if (!('id' in lookup)) return lookup;
         purchaseId = lookup.id;

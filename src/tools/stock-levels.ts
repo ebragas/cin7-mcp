@@ -36,7 +36,8 @@ interface ProductAvailabilityResponse {
     ProductAvailabilityList?: ProductAvailabilityRow[] | null;
 }
 
-export function mapStockLevels(response: ProductAvailabilityResponse | null) {
+/** `requestedPage` stands in for the page number when Cin7 leaves `Page` out of the body. */
+export function mapStockLevels(response: ProductAvailabilityResponse | null, requestedPage = 1) {
     const rows = (response?.ProductAvailabilityList ?? []).map(row => ({
         sku: row.SKU ?? null,
         name: row.Name ?? null,
@@ -51,7 +52,7 @@ export function mapStockLevels(response: ProductAvailabilityResponse | null) {
         nextDeliveryDate: row.NextDeliveryDate ?? null
     }));
     const total = response?.Total ?? rows.length;
-    const page = response?.Page ?? 1;
+    const page = response?.Page ?? requestedPage;
     return {
         rows,
         total,
@@ -61,12 +62,13 @@ export function mapStockLevels(response: ProductAvailabilityResponse | null) {
 }
 
 export async function getStockLevels(cin7: Cin7Client, input: z.infer<typeof inputSchema>) {
+    const page = input.page ?? 1;
     const response = await cin7.get('ref/productavailability', {
         Sku: input.sku,
         Name: input.name,
         Location: input.location,
-        Page: input.page ?? 1,
+        Page: page,
         Limit: PAGE_SIZE
     });
-    return mapStockLevels(response as ProductAvailabilityResponse);
+    return mapStockLevels(response as ProductAvailabilityResponse, page);
 }

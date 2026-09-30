@@ -40,7 +40,8 @@ export interface PurchaseListResponse {
     PurchaseList?: PurchaseListRow[] | null;
 }
 
-export function mapPurchaseList(response: PurchaseListResponse | null) {
+/** `requestedPage` stands in for the page number when Cin7 leaves `Page` out of the body. */
+export function mapPurchaseList(response: PurchaseListResponse | null, requestedPage = 1) {
     const rows = (response?.PurchaseList ?? []).map(row => ({
         id: row.ID ?? null,
         orderNumber: row.OrderNumber ?? null,
@@ -54,18 +55,19 @@ export function mapPurchaseList(response: PurchaseListResponse | null) {
         type: row.Type ?? null
     }));
     const total = response?.Total ?? rows.length;
-    const page = response?.Page ?? 1;
+    const page = response?.Page ?? requestedPage;
     return { rows, total, page, ...pagingNote(total, page, rows.length, 'No purchases matched.') };
 }
 
 export async function listPurchases(cin7: Cin7Client, input: z.infer<typeof inputSchema>) {
+    const page = input.page ?? 1;
     const response = await cin7.get('purchaseList', {
         Search: input.search,
         Status: input.status,
         RequiredBy: input.requiredBy,
         UpdatedSince: input.updatedSince,
-        Page: input.page ?? 1,
+        Page: page,
         Limit: PAGE_SIZE
     });
-    return mapPurchaseList(response as PurchaseListResponse);
+    return mapPurchaseList(response as PurchaseListResponse, page);
 }

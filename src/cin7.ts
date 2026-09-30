@@ -55,7 +55,8 @@ export function createCin7Client(options: Cin7ClientOptions): Cin7Client {
             const url = new URL(path, BASE_URL);
             for (const [name, value] of Object.entries(params)) {
                 // A blank value would be sent as a filter on the empty string, so it counts as absent.
-                if (value !== undefined && String(value).trim() !== '') url.searchParams.set(name, String(value));
+                const text = value === undefined ? '' : String(value).trim();
+                if (text !== '') url.searchParams.set(name, text);
             }
 
             let response = await request(url);

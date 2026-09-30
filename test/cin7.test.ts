@@ -70,6 +70,14 @@ describe('Cin7 client', () => {
         expect([...url.searchParams.keys()]).toEqual(['Location', 'Page']);
     });
 
+    it('trims the values it sends', async () => {
+        const { client, fetch } = setup(ok({}));
+
+        await client.get('purchaseList', { Search: ' Bayside ' });
+
+        expect(new URL(String(fetch.mock.calls[0]![0])).searchParams.get('Search')).toBe('Bayside');
+    });
+
     it.each([429, 503])('waits 5 seconds and retries once on HTTP %i', async status => {
         const { client, fetch, sleep } = setup(new Response('busy', { status }), ok({ Total: 1 }));
 
