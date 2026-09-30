@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "cin7-core",
   "display_name": "Cin7 Core (read-only)",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Read-only access to Cin7 Core stock levels and purchase orders from Claude Desktop.",
   "author": { "name": "Eric Bragas" },
   "server": {

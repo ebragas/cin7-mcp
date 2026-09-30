@@ -35,7 +35,7 @@ async function run(tool: string, work: () => Promise<unknown>) {
 const annotations = { readOnlyHint: true };
 
 serveStdio(() => {
-    const server = new McpServer({ name: 'cin7-core', version: '0.1.0' });
+    const server = new McpServer({ name: 'cin7-core', version: '0.1.1' });
     server.registerTool(
         stockLevels.name,
         { description: stockLevels.description, inputSchema: stockLevels.inputSchema, annotations },
