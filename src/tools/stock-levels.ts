@@ -36,8 +36,8 @@ interface ProductAvailabilityResponse {
     ProductAvailabilityList?: ProductAvailabilityRow[] | null;
 }
 
-export function mapStockLevels(response: ProductAvailabilityResponse) {
-    const rows = (response.ProductAvailabilityList ?? []).map(row => ({
+export function mapStockLevels(response: ProductAvailabilityResponse | null) {
+    const rows = (response?.ProductAvailabilityList ?? []).map(row => ({
         sku: row.SKU ?? null,
         name: row.Name ?? null,
         location: row.Location ?? null,
@@ -50,8 +50,8 @@ export function mapStockLevels(response: ProductAvailabilityResponse) {
         inTransit: row.InTransit ?? null,
         nextDeliveryDate: row.NextDeliveryDate ?? null
     }));
-    const total = response.Total ?? rows.length;
-    const page = response.Page ?? 1;
+    const total = response?.Total ?? rows.length;
+    const page = response?.Page ?? 1;
     return {
         rows,
         total,

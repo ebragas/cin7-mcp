@@ -37,6 +37,10 @@ describe('mapPurchaseList', () => {
         expect(result).not.toHaveProperty('note');
     });
 
+    it('reads a null body as zero rows', () => {
+        expect(mapPurchaseList(null)).toMatchObject({ rows: [], total: 0, page: 1 });
+    });
+
     it('names the next page when more pages exist', () => {
         expect(mapPurchaseList({ ...fixture, Total: 250 }).note).toContain('page 2');
         expect(mapPurchaseList({ ...fixture, Total: 250, Page: 3 })).not.toHaveProperty('note');

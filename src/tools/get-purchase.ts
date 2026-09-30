@@ -55,7 +55,8 @@ interface AdvancedPurchaseResponse {
 function receiptLines(sections: ReceiptSection[] | null | undefined) {
     if (!Array.isArray(sections)) return [];
     return sections
-        .filter(section => section.Status !== 'NOT AVAILABLE')
+        // NOT AVAILABLE is a stage that has not happened; VOIDED is a receipt that was undone.
+        .filter(section => section.Status !== 'NOT AVAILABLE' && section.Status !== 'VOIDED')
         .flatMap(section => section.Lines ?? [])
         .map(line => ({
             sku: line.SKU ?? null,

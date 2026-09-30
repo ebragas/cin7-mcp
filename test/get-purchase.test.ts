@@ -65,6 +65,19 @@ describe('mapPurchase', () => {
         ).toEqual([]);
     });
 
+    it('skips VOIDED sections, whose receipts were undone', () => {
+        const voided = <T extends { Status: string }>(sections: T[]) =>
+            sections.map(section => ({ ...section, Status: 'VOIDED' }));
+
+        expect(mapPurchase({ ...detail, PutAway: voided(detail.PutAway) }).receipts).toEqual([
+            { ...putAwayReceipt, location: null }
+        ]);
+        expect(
+            mapPurchase({ ...detail, PutAway: voided(detail.PutAway), StockReceived: voided(detail.StockReceived) })
+                .receipts
+        ).toEqual([]);
+    });
+
     it('collects lines from every available section', () => {
         const second = { ...detail.PutAway[0]!, Lines: [{ ...detail.PutAway[0]!.Lines[0]!, Quantity: 2, Location: 'Annex' }] };
 

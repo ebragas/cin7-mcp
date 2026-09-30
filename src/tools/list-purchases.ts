@@ -40,8 +40,8 @@ export interface PurchaseListResponse {
     PurchaseList?: PurchaseListRow[] | null;
 }
 
-export function mapPurchaseList(response: PurchaseListResponse) {
-    const rows = (response.PurchaseList ?? []).map(row => ({
+export function mapPurchaseList(response: PurchaseListResponse | null) {
+    const rows = (response?.PurchaseList ?? []).map(row => ({
         id: row.ID ?? null,
         orderNumber: row.OrderNumber ?? null,
         supplier: row.Supplier ?? null,
@@ -53,8 +53,8 @@ export function mapPurchaseList(response: PurchaseListResponse) {
         currency: row.SupplierCurrency ?? null,
         type: row.Type ?? null
     }));
-    const total = response.Total ?? rows.length;
-    const page = response.Page ?? 1;
+    const total = response?.Total ?? rows.length;
+    const page = response?.Page ?? 1;
     return { rows, total, page, ...pagingNote(total, page, rows.length, 'No purchases matched.') };
 }
 

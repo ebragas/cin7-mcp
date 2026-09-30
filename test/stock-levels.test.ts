@@ -26,6 +26,10 @@ describe('mapStockLevels', () => {
         expect(result.rows[3]).toMatchObject({ sku: 'test product 4', allocated: 5, available: 2 });
     });
 
+    it('reads a null body as zero rows', () => {
+        expect(mapStockLevels(null)).toMatchObject({ rows: [], total: 0, page: 1 });
+    });
+
     it('adds no note when the page holds every row', () => {
         expect(mapStockLevels(fixture)).not.toHaveProperty('note');
         expect(mapStockLevels({ ...fixture, Total: 100 })).not.toHaveProperty('note');
