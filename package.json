@@ -1,0 +1,27 @@
+{
+  "name": "cin7-core-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --target=node20 --outfile=bundle/server/index.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "validate": "mcpb validate bundle/manifest.json",
+    "pack": "npm run build && npm run validate && mcpb pack bundle cin7-core-0.1.0.mcpb"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "^2.2.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@anthropic-ai/mcpb": "^2.1.2",
+    "@types/node": "^26.6.3",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.11"
+  }
+}
