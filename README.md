@@ -33,7 +33,7 @@ You need:
 
 ### 2. Download the extension
 
-Download `cin7-core-0.1.0.mcpb` from the [latest release](https://github.com/ebragas/cin7-mcp/releases/latest).
+Download the `.mcpb` file from the [latest release](https://github.com/ebragas/cin7-mcp/releases/latest).
 
 ### 3. Install it
 
@@ -69,7 +69,7 @@ To update, download the newer `.mcpb` file and install it the same way.
 
 This is an early version.
 
-- Tested: the automated test suite, install and key delivery in Claude Desktop on macOS, and the response to incorrect keys against the live Cin7 Core API.
+- Tested: the automated test suite, install and key delivery in Claude Desktop on macOS using a test build, and the response to incorrect keys against the live Cin7 Core API.
 - Still to be tested: results from a live Cin7 Core account with valid keys, and installation on Windows.
 
 ## Build from source
@@ -82,6 +82,6 @@ npm test
 npm run pack
 ```
 
-`npm run pack` builds the server into a single file and writes `cin7-core-0.1.0.mcpb` to the project root.
+`npm run pack` builds the server into a single file and writes the `.mcpb` file to the project root.
 
 To run the server during development, add it to `claude_desktop_config.json` with `CIN7_ACCOUNT_ID` and `CIN7_APPLICATION_KEY` set in its `env`, pointing `node` at `bundle/server/index.js`.
