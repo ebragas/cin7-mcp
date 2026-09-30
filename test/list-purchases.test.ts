@@ -42,6 +42,12 @@ describe('mapPurchaseList', () => {
         expect(mapPurchaseList({ ...fixture, Total: 250, Page: 3 })).not.toHaveProperty('note');
     });
 
+    it('says the page is past the end when rows exist on earlier pages', () => {
+        const result = mapPurchaseList({ Total: 150, Page: 3, PurchaseList: [] });
+
+        expect(result.note).toBe('Page 3 is past the last page. There are 150 results, on pages 1 to 2.');
+    });
+
     it('adds a plain note when there are zero rows', () => {
         const result = mapPurchaseList({ Total: 0, Page: 1, PurchaseList: [] });
 

@@ -143,6 +143,8 @@ export async function getPurchase(cin7: Cin7Client, input: z.infer<typeof inputS
         purchaseId = lookup.id;
     }
 
-    const purchase = await cin7.get('advanced-purchase', { ID: purchaseId });
-    return mapPurchase(purchase as AdvancedPurchaseResponse);
+    // What Cin7 answers for an unknown ID is undocumented, so a 200 without a purchase in it reads as not found.
+    const purchase = (await cin7.get('advanced-purchase', { ID: purchaseId })) as AdvancedPurchaseResponse | null;
+    if (!purchase?.ID) return { note: `No purchase has the id "${purchaseId}".` };
+    return mapPurchase(purchase);
 }

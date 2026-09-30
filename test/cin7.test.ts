@@ -61,6 +61,15 @@ describe('Cin7 client', () => {
         ]);
     });
 
+    it('leaves out blank parameters, which would otherwise filter on an empty value', async () => {
+        const { client, fetch } = setup(ok({}));
+
+        await client.get('ref/productavailability', { Sku: '', Name: '  ', Location: 'Main', Page: 1 });
+
+        const url = new URL(String(fetch.mock.calls[0]![0]));
+        expect([...url.searchParams.keys()]).toEqual(['Location', 'Page']);
+    });
+
     it.each([429, 503])('waits 5 seconds and retries once on HTTP %i', async status => {
         const { client, fetch, sleep } = setup(new Response('busy', { status }), ok({ Total: 1 }));
 

@@ -104,6 +104,17 @@ describe('getPurchase', () => {
         expect(result).toMatchObject({ orderNumber: 'PO-00069', receipts: [putAwayReceipt] });
     });
 
+    it.each([[null], [{}], [[]], [[{ ErrorCode: 400, Exception: 'Not found' }]]])(
+        'says no purchase has that id when Cin7 answers 200 with %j',
+        async body => {
+            const get = vi.fn(async () => body);
+
+            const result = await getPurchase({ get }, { id: 'typo-guid' });
+
+            expect(result).toEqual({ note: 'No purchase has the id "typo-guid".' });
+        }
+    );
+
     it('resolves one exact order number match, ignoring letter case, then fetches detail', async () => {
         const cin7 = client();
 
